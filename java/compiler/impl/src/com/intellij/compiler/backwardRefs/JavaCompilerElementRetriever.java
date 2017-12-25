@@ -143,8 +143,7 @@ public class JavaCompilerElementRetriever {
         }
       }
       return result.toArray(PsiClass.EMPTY_ARRAY);
-    }
-
+    } 
     private static boolean match(PsiClass psiClass, Collection<InternalNameMatcher> matchers) {
       for (InternalNameMatcher matcher : matchers) {
         if (matcher.matches(psiClass)) {

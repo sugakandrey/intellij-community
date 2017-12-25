@@ -30,14 +30,20 @@ import org.jetbrains.jps.backwardRefs.SignatureData;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class CompilerIndices {
+public class CompilerIndices implements CompilerIndexDescriptor<CompiledFileData> {
+  public static final CompilerIndices INSTANCE = new CompilerIndices();
+
   //TODO manage version separately
-  public final static int VERSION = 6;
+  private final static int VERSION = 6;
+  private static final String VERSION_FILE = "version";
+  
+  private static final String INDEX_DIR = "backward-refs";
 
   public final static IndexId<LightRef, Integer> BACK_USAGES = IndexId.create("back.refs");
   public final static IndexId<LightRef, Collection<LightRef>> BACK_HIERARCHY = IndexId.create("back.hierarchy");
@@ -45,7 +51,23 @@ public class CompilerIndices {
   public final static IndexId<SignatureData, Collection<LightRef>> BACK_MEMBER_SIGN = IndexId.create("back.member.sign");
   public final static IndexId<LightRef, Collection<LightRef>> BACK_CAST = IndexId.create("back.cast");
 
-  public static List<IndexExtension<?, ?, CompiledFileData>> getIndices() {
+  @Override
+  public int getVersion() {
+    return VERSION;
+  }
+
+  @Override
+  public File getIndicesDir(File buildDir) {
+    return new File(buildDir, INDEX_DIR);
+  }
+
+  @Override
+  public File getVersionFile(File buildDir) {
+    return new File(buildDir, VERSION_FILE);
+  }
+
+  @Override
+  public List<IndexExtension<?, ?, CompiledFileData>> getIndices() {
     return Arrays.asList(createBackwardClassDefinitionExtension(),
                          createBackwardUsagesExtension(),
                          createBackwardHierarchyExtension(),
