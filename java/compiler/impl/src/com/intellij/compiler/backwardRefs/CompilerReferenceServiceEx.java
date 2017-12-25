@@ -15,6 +15,7 @@
  */
 package com.intellij.compiler.backwardRefs;
 
+import com.intellij.compiler.CompilerReferenceService;
 import com.intellij.compiler.chainsSearch.ChainOpAndOccurrences;
 import com.intellij.compiler.chainsSearch.MethodCall;
 import com.intellij.compiler.chainsSearch.TypeCast;
@@ -29,7 +30,7 @@ import java.util.SortedSet;
 /**
  * The service is used for / java completion sorting / java relevant chain completion / frequently used superclass inspection
  */
-public interface CompilerReferenceServiceEx {
+public interface CompilerReferenceServiceEx extends CompilerReferenceService {
   @NotNull
   SortedSet<ChainOpAndOccurrences<MethodCall>> findMethodReferenceOccurrences(@NotNull String rawReturnType,
                                                                               @SignatureData.IteratorKind byte iteratorKind,

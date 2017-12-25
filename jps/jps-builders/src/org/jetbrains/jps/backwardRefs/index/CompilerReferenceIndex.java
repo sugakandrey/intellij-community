@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Created by sugakandrey.
- */
 public class CompilerReferenceIndex<Input> {
   private final static Logger LOG = Logger.getInstance(CompilerReferenceIndex.class);
 

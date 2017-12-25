@@ -27,6 +27,7 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.compiler.*;
+import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.ControlFlowException;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -61,7 +62,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.jps.backwardRefs.LightRef;
-import org.jetbrains.jps.backwardRefs.index.CompilerIndices;
 import org.jetbrains.jps.backwardRefs.index.CompilerReferenceIndexUtil;
 
 import java.io.File;
@@ -76,8 +76,8 @@ import java.util.stream.Stream;
 import static com.intellij.psi.search.GlobalSearchScope.getScopeRestrictedByFileTypes;
 import static com.intellij.psi.search.GlobalSearchScope.notScope;
 
-public abstract class CompilerReferenceServiceBase<Reader extends CompilerReferenceReader<?>>
-  extends CompilerReferenceService implements ModificationTracker {
+public abstract class CompilerReferenceServiceBase<Reader extends CompilerReferenceReader<?>> extends AbstractProjectComponent
+  implements CompilerReferenceService, ModificationTracker {
   private static final Logger LOG = Logger.getInstance(CompilerReferenceServiceBase.class);
 
   protected final Set<FileType> myFileTypes;
@@ -106,7 +106,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
 
   @Override
   public void projectOpened() {
-    if (isEnabled()) {
+    if (CompilerReferenceService.isEnabled()) {
       MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
       connection.subscribe(BuildManagerListener.TOPIC, new BuildManagerListener() {
         @Override
@@ -150,7 +150,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
           boolean isUpToDate;
           File buildDir = BuildManager.getInstance().getProjectSystemDirectory(myProject);
-          boolean indexExist = CompilerReferenceIndexUtil.existsUpToDate(buildDir, CompilerIndices.INSTANCE);
+          boolean indexExist = CompilerReferenceIndexUtil.existsUpToDate(buildDir, myReader.myIndex.getDescriptor());
           if (indexExist) {
             CompileScope projectCompileScope = compilerManager.createProjectCompileScope(myProject);
             isUpToDate = compilerManager.isUpToDate(projectCompileScope);
@@ -299,7 +299,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
 
   @Override
   public boolean isActive() {
-    return myReader != null && isEnabled();
+    return myReader != null && CompilerReferenceService.isEnabled();
   }
 
   private Map<VirtualFile, SearchId[]> calculateDirectInheritors(@NotNull PsiNamedElement aClass,

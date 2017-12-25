@@ -8,9 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-/**
- * Created by sugakandrey.
- */
 public class CompilerReferenceIndexWriter<Input> {
   protected final CompilerReferenceIndex<Input> myIndex;
 

@@ -22,9 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by sugakandrey.
- */
 public class CompilerReferenceServiceImpl extends CompilerReferenceServiceBase<BackwardReferenceReader> implements CompilerReferenceServiceEx {
   public CompilerReferenceServiceImpl(Project project,
                                       FileDocumentManager fileDocumentManager,

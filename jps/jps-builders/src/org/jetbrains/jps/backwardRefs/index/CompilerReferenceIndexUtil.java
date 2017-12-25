@@ -10,15 +10,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-/**
- * Created by sugakandrey.
- */
 public class CompilerReferenceIndexUtil {
   private static final Logger LOG = Logger.getInstance(CompilerReferenceIndexUtil.class);
 
   private CompilerReferenceIndexUtil() {}
 
-  public static boolean exist(@NotNull File buildDir, CompilerIndexDescriptor<?> descriptor) {
+  public static boolean exists(@NotNull File buildDir, CompilerIndexDescriptor<?> descriptor) {
     return descriptor.getIndicesDir(buildDir).exists();
   }
 
@@ -57,6 +54,6 @@ public class CompilerReferenceIndexUtil {
     if (buildDir == null || versionDiffers(buildDir, descriptor)) {
       return false;
     }
-    return exist(buildDir, descriptor);
+    return exists(buildDir, descriptor);
   }
 }

@@ -17,12 +17,11 @@ package org.jetbrains.jps.backwardRefs;
 
 import org.jetbrains.jps.backwardRefs.index.CompilerReferenceIndex;
 import org.jetbrains.jps.backwardRefs.index.CompiledFileData;
-import org.jetbrains.jps.backwardRefs.index.CompilerIndices;
 
 import java.io.File;
 
 public class CompilerBackwardReferenceIndex extends CompilerReferenceIndex<CompiledFileData> {
   public CompilerBackwardReferenceIndex(File buildDir, boolean readOnly) {
-    super(CompilerIndices.INSTANCE, buildDir, readOnly);
+    super(BackwardReferenceIndexDescriptor.INSTANCE, buildDir, readOnly);
   }
 }

@@ -39,7 +39,7 @@ import java.io.IOException;
 
 public class BackwardReferenceIndexWriter extends CompilerReferenceIndexWriter<CompiledFileData> {
   public static final String PROP_KEY = "jps.backward.ref.index.builder";
-  private static final CompilerIndexDescriptor<?> DESCRIPTOR = CompilerIndices.INSTANCE;
+  private static final CompilerIndexDescriptor<?> DESCRIPTOR = BackwardReferenceIndexDescriptor.INSTANCE;
 
   private static volatile BackwardReferenceIndexWriter ourInstance;
 
@@ -86,7 +86,7 @@ public class BackwardReferenceIndexWriter extends CompilerReferenceIndexWriter<C
         }
       }
 
-      if (CompilerReferenceIndexUtil.exist(buildDir, DESCRIPTOR) || isRebuild) {
+      if (CompilerReferenceIndexUtil.exists(buildDir, DESCRIPTOR) || isRebuild) {
         ourInstance = new BackwardReferenceIndexWriter(new CompilerBackwardReferenceIndex(buildDir, false));
       }
     } else {
