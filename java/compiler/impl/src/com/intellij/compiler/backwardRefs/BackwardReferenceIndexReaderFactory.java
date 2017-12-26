@@ -18,6 +18,7 @@ import gnu.trove.THashSet;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.backwardRefs.BackwardReferenceIndexDescriptor;
 import org.jetbrains.jps.backwardRefs.CompilerBackwardReferenceIndex;
 import org.jetbrains.jps.backwardRefs.LightRef;
 import org.jetbrains.jps.backwardRefs.SignatureData;
@@ -30,9 +31,6 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created by sugakandrey.
- */
 public class BackwardReferenceIndexReaderFactory implements CompilerReferenceReaderFactory<BackwardReferenceIndexReaderFactory.BackwardReferenceReader> {
   public static final BackwardReferenceIndexReaderFactory INSTANCE = new BackwardReferenceIndexReaderFactory();
   
@@ -42,7 +40,7 @@ public class BackwardReferenceIndexReaderFactory implements CompilerReferenceRea
   @Nullable
   public BackwardReferenceReader create(Project project) {
     File buildDir = BuildManager.getInstance().getProjectSystemDirectory(project);
-    if (!CompilerReferenceIndexUtil.existsUpToDate(buildDir, CompilerIndices.INSTANCE)) return null;
+    if (!CompilerReferenceIndexUtil.existsUpToDate(buildDir, BackwardReferenceIndexDescriptor.INSTANCE)) return null;
     try {
       return new BackwardReferenceReader(BuildManager.getInstance().getProjectSystemDirectory(project));
     }

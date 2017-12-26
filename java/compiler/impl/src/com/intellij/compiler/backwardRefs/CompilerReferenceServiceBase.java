@@ -293,7 +293,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private boolean isServiceEnabledFor(PsiElement element) {
+  protected boolean isServiceEnabledFor(PsiElement element) {
     if (!isActive()) return false;
     PsiFile file = ReadAction.compute(() -> element.getContainingFile());
     return file != null && !InjectedLanguageManager.getInstance(myProject).isInjectedFragment(file);
@@ -406,7 +406,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private void closeReaderIfNeed(IndexCloseReason reason) {
+  protected void closeReaderIfNeed(IndexCloseReason reason) {
     myOpenCloseLock.lock();
     try {
       if (reason == IndexCloseReason.COMPILATION_STARTED) {
@@ -422,7 +422,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private void openReaderIfNeed(IndexOpenReason reason) {
+  protected void openReaderIfNeed(IndexOpenReason reason) {
     myCompilationCount.increment();
     myOpenCloseLock.lock();
     try {
@@ -449,7 +449,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
   
-  private void markAsOutdated(boolean decrementBuildCount) {
+  protected void markAsOutdated(boolean decrementBuildCount) {
     myOpenCloseLock.lock();
     try {
       if (decrementBuildCount) {
@@ -461,19 +461,19 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  ProjectFileIndex getFileIndex() {
+  public ProjectFileIndex getFileIndex() {
     return myProjectFileIndex;
   }
 
-  Set<FileType> getFileTypes() {
+  public Set<FileType> getFileTypes() {
     return myFileTypes;
   }
 
-  Project getProject() {
+  public Project getProject() {
     return myProject;
   }
 
-  private static void executeOnBuildThread(Runnable compilationFinished) {
+  protected static void executeOnBuildThread(Runnable compilationFinished) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       compilationFinished.run();
     } else {
@@ -481,7 +481,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private enum ElementPlace {
+  protected enum ElementPlace {
     SRC, LIB;
 
     private static ElementPlace get(VirtualFile file, ProjectFileIndex index) {
@@ -490,7 +490,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private static class ScopeWithoutReferencesOnCompilation extends GlobalSearchScope {
+  protected static class ScopeWithoutReferencesOnCompilation extends GlobalSearchScope {
     private final TIntHashSet myReferentIds;
     private final ProjectFileIndex myIndex;
 
@@ -525,7 +525,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     return myCompilationCount.longValue();
   }
 
-  static class CompilerElementInfo {
+  protected static class CompilerElementInfo {
     final ElementPlace place;
     final LightRef[] searchElements;
 
@@ -535,7 +535,7 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     }
   }
 
-  private static class HierarchySearchKey {
+  protected static class HierarchySearchKey {
     private final CompilerHierarchySearchType mySearchType;
     private final FileType mySearchFileType;
 
@@ -638,19 +638,19 @@ public abstract class CompilerReferenceServiceBase<Reader extends CompilerRefere
     return result;
   }
 
-  private static boolean requireIndexRebuild(@Nullable Throwable exception) {
+  protected static boolean requireIndexRebuild(@Nullable Throwable exception) {
     return exception instanceof PersistentEnumeratorBase.CorruptedException ||
            exception instanceof StorageException ||
            exception instanceof IOException;
   }
 
-  private enum IndexCloseReason {
+  protected enum IndexCloseReason {
     AN_EXCEPTION,
     COMPILATION_STARTED,
     PROJECT_CLOSED
   }
 
-  private enum IndexOpenReason {
+  protected enum IndexOpenReason {
     COMPILATION_FINISHED,
     UP_TO_DATE_CACHE
   }

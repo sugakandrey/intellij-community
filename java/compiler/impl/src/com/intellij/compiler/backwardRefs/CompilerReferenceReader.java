@@ -16,9 +16,6 @@ import org.jetbrains.jps.backwardRefs.index.CompilerReferenceIndexUtil;
 import java.io.File;
 import java.util.Map;
 
-/**
- * Created by sugakandrey.
- */
 public abstract class CompilerReferenceReader<Index extends CompilerReferenceIndex<?>> {
   protected final Index myIndex;
   protected final File myBuildDir;
