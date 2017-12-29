@@ -1,16 +1,15 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.compiler.backwardRefs.scala
 
-import java.io.{DataInput, DataOutput, File}
+import java.io.File
 import java.util
 
-import com.intellij.openapi.util.io.DataInputOutputUtilRt
-
-import scala.collection.JavaConverters._
 import com.intellij.util.indexing.{DataIndexer, IndexExtension, IndexId}
 import com.intellij.util.io.{DataExternalizer, KeyDescriptor, VoidDataExternalizer}
-import org.jetbrains.jps.backwardRefs.{LightRef, LightRefDescriptor}
 import org.jetbrains.jps.backwardRefs.index.CompilerIndexDescriptor
+import org.jetbrains.jps.backwardRefs.{LightRef, LightRefDescriptor}
+
+import scala.collection.JavaConverters._
 
 object ScalaCompilerIndexDescriptor extends CompilerIndexDescriptor[ClassfileData] { self =>
 
@@ -33,16 +32,16 @@ object ScalaCompilerIndexDescriptor extends CompilerIndexDescriptor[ClassfileDat
       override def getKeyDescriptor: KeyDescriptor[LightRef]              = LightRefDescriptor.INSTANCE
       override def getValueExternalizer: DataExternalizer[Void]           = VoidDataExternalizer.INSTANCE
       override def getVersion: Int                                        = self.getVersion
-      override def getIndexer: DataIndexer[LightRef, Void, ClassfileData] = ???
+      override def getIndexer: DataIndexer[LightRef, Void, ClassfileData] = _.indexableUsages
     }
 
   private def backwardHierarchyExtension: IndexExtension[_, _, ClassfileData] =
     new IndexExtension[LightRef, LightRef, ClassfileData] {
-      override def getName: IndexId[LightRef, LightRef]                            = backwardHierarchy
-      override def getKeyDescriptor: KeyDescriptor[LightRef]                       = LightRefDescriptor.INSTANCE
-      override def getValueExternalizer: DataExternalizer[LightRef]                = LightRefDescriptor.INSTANCE
-      override def getVersion: Int                                                 = self.getVersion
-      override def getIndexer: DataIndexer[LightRef, LightRef, ClassfileData] = ???
+      override def getName: IndexId[LightRef, LightRef]                       = backwardHierarchy
+      override def getKeyDescriptor: KeyDescriptor[LightRef]                  = LightRefDescriptor.INSTANCE
+      override def getValueExternalizer: DataExternalizer[LightRef]           = LightRefDescriptor.INSTANCE
+      override def getVersion: Int                                            = self.getVersion
+      override def getIndexer: DataIndexer[LightRef, LightRef, ClassfileData] = _.indexableHierarchy
     }
 
   override def getIndices: util.Collection[IndexExtension[_, _, ClassfileData]] =

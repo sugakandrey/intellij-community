@@ -6,4 +6,8 @@ import java.io.File
 import org.jetbrains.jps.backwardRefs.index.CompilerReferenceIndex
 
 class ScalaCompilerReferenceIndex(buildDir: File, readOnly: Boolean)
-    extends CompilerReferenceIndex[ClassfileData](ScalaCompilerIndexDescriptor, buildDir, readOnly)
+    extends CompilerReferenceIndex[ClassfileData](
+      ScalaCompilerIndexDescriptor,
+      buildDir,
+      readOnly
+    )

@@ -50,8 +50,9 @@ class ScalaCompilerReferenceReader(
   private def findFileByEnumeratorId(id: Int): Option[VirtualFile] = {
     val path = myIndex.getFilePathEnumerator.valueOf(id)
     val file = new File(path)
-      try Option(VfsUtil.findFileByIoFile(file, false))
-      catch { case e: IOException => throw new RuntimeException(e) }
+    
+    try Option(VfsUtil.findFileByIoFile(file, false))
+    catch { case e: IOException => throw new RuntimeException(e) }
   }
 
   override def getDirectInheritors(
@@ -60,21 +61,7 @@ class ScalaCompilerReferenceReader(
     dirtyScope: GlobalSearchScope,
     fileType: FileType,
     searchType: CompilerHierarchySearchType
-  ): util.Map[VirtualFile, Array[SearchId]] = rethrowStorageExceptionIn {
-//    searchType match {
-//      case CompilerHierarchySearchType.DIRECT_INHERITOR =>
-//        val effectiveScope = GlobalSearchScope.notScope(dirtyScope).intersectWith(searchScope)
-//        val inheritors = new util.HashMap[VirtualFile, Array[SearchId]]()
-//
-//        myIndex.get(ScalaCompilerIndexDescriptor.backwardHierarchy).getData(searchElement).forEach {
-//          case (id: Int, children: LightRef) => 
-//            val vf = findFileByEnumeratorId(id)
-//            vf.collect { case f if effectiveScope.contains(f) => inheritors.put(f, )}
-//        }
-//      case _ => null
-//    }
-    null
-  }
+  ): util.Map[VirtualFile, Array[SearchId]] = null
 
   override def getAnonymousCount(classDef: LightRef.LightClassHierarchyElementDef, checkDefinitions: Boolean): Integer =
     0
@@ -86,7 +73,7 @@ class ScalaCompilerReferenceReader(
     includeAnonymous: Boolean,
     interruptNumber: Int
   ): Array[LightRef.LightClassHierarchyElementDef] = rethrowStorageExceptionIn {
-    val res = new THashSet[LightRef.LightClassHierarchyElementDef]()
+    val res   = new THashSet[LightRef.LightClassHierarchyElementDef]()
     val queue = new Queue[LightRef.LightClassHierarchyElementDef](10)
 
     @tailrec

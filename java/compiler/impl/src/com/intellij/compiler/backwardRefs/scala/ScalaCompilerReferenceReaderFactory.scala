@@ -13,7 +13,7 @@ class ScalaCompilerReferenceReaderFactory extends CompilerReferenceReaderFactory
 
   override def create(project: Project): ScalaCompilerReferenceReader = {
     val buildDir = BuildManager.getInstance.getProjectSystemDirectory(project)
-    if (!CompilerReferenceIndexUtil.existsUpToDate(buildDir, BackwardReferenceIndexDescriptor.INSTANCE)) null
+    if (!CompilerReferenceIndexUtil.existsWithLatestVersion(buildDir, BackwardReferenceIndexDescriptor.INSTANCE)) null
     else {
       try new ScalaCompilerReferenceReader(BuildManager.getInstance.getProjectSystemDirectory(project))
       catch {
@@ -23,8 +23,10 @@ class ScalaCompilerReferenceReaderFactory extends CompilerReferenceReaderFactory
       }
     }
   }
+
+  override def getReaderIndexDescriptor: ScalaCompilerIndexDescriptor.type = ScalaCompilerIndexDescriptor
 }
 
-object ScalaCompilerReferenceReaderFactory {
+object ScalaCompilerReferenceReaderFactory extends ScalaCompilerReferenceReaderFactory {
   private val LOG = Logger.getInstance(classOf[ScalaCompilerReferenceReaderFactory])
 }
